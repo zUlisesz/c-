@@ -1,0 +1,63 @@
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+int main() {
+    int f = 2;  // filas
+    int c = 2;  // columnas
+    int p = 2;  // capas
+    int b = 2;  // bloques
+    int h = 2;  // hipercapas
+
+    // Declaramos una matriz de 5 dimensiones
+    int array[f][c][p][b][h];
+
+    // Llenamos la matriz con valores impares
+    for (int i = 0; i < f; i++) {
+        for (int j = 0; j < c; j++) {
+            for (int k = 0; k < p; k++) {
+                for (int l = 0; l < b; l++) {
+                    for (int m = 0; m < h; m++) {
+                        array[i][j][k][l][m] = (rand() % 50) * 2 + 1;
+                        cout << array[i][j][k][l][m] << " ";
+                    }
+                }
+            }
+        }
+        cout << "\n";
+    }
+
+    cout << " - - - - - - - - - - - - - - - " << endl;
+
+    // Imprimimos las direcciones reales en memoria
+    for (int i = 0; i < f; i++) {
+        for (int j = 0; j < c; j++) {
+            for (int k = 0; k < p; k++) {
+                for (int l = 0; l < b; l++) {
+                    for (int m = 0; m < h; m++) {
+                        cout << &array[i][j][k][l][m] << " ";
+                    }
+                }
+            }
+        }
+        cout << "\n";
+    }
+
+    cout << " - - - - - - - - - - - - - - - " << endl;
+
+    // Imprimimos las direcciones con el polinomio de direccionamiento
+    for (int i = 0; i < f; i++) {
+        for (int j = 0; j < c; j++) {
+            for (int k = 0; k < p; k++) {
+                for (int l = 0; l < b; l++) {
+                    for (int m = 0; m < h; m++) {
+                        cout << &array[0][0][0][0][0] 
+                             + ((i * c * p * b * h) + (j * p * b * h) + (k * b * h) + (l * h) + m) 
+                             << " ";
+                    }
+                }
+            }
+        }
+        cout << "\n";
+    }
+}
