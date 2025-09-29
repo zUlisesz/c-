@@ -1,0 +1,142 @@
+#include <iostream>
+#include <list>
+using namespace std;
+
+struct Contacto {
+    string nombre;
+    string numero;
+};
+
+int menu() {
+    int opcion;
+    cout << "\n---- AGENDA ----\n";
+    cout << "1) Agregar contacto\n2) Ver contactos\n3) Buscar contacto\n4) Eliminar contacto\n5) Salir\n" << endl;
+    cout << "Que operacion desea realizar? "<< endl ;
+    cin >> opcion;
+    return opcion;
+}
+
+void eliminar_toda_lista(list<Contacto>& agenda) {
+    agenda.clear();
+    cout << "Todos los contactos han sido eliminados.\n";
+}
+
+void eliminar_tope(list<Contacto>& agenda) {
+    if (!agenda.empty()) {
+        cout << "Eliminando el primer contacto -> " 
+             << agenda.front().nombre << endl;
+        agenda.pop_front();
+    } else {
+        cout << "La agenda está vacía.\n";
+    }
+}
+
+void eliminar_fondo(list<Contacto>& agenda) {
+    if (!agenda.empty()) {
+        cout << "Eliminando el último contacto -> " 
+             << agenda.back().nombre << endl;
+        agenda.pop_back();
+    } else {
+        cout << "La agenda está vacía.\n";
+    }
+}
+
+void realizar_operacion(int opcion, list<Contacto>& agenda) {
+    switch (opcion) {
+        case 1:{
+		    Contacto nuevo;
+		    cout << "Nombre del contacto: ";
+		    cin.ignore();
+		    getline(cin, nuevo.nombre);
+		    cout << "Numero del contacto: ";
+		    cin >> nuevo.numero;
+		    agenda.push_front(nuevo);
+		    cout << "Contacto agregado con Exitosamente.\n";
+		    break;
+		}
+        case 2:{
+            cout << "\n--- Agenda ---\n";
+            if (agenda.empty()) {
+                cout << "No hay contactos guardados.\n";
+            } else {
+                for (const auto& c : agenda) {
+                    cout << "Nombre: " << c.nombre << ", Numero: " << c.numero << endl;
+                }
+            }
+            break;
+    	}
+        case 3: {
+            string identificador;
+            cout << "Nombre o número a buscar: ";
+            cin >> identificador;
+
+            bool encontrado = false;
+            for (const auto& c : agenda) {
+                if (c.nombre == identificador || c.numero == identificador) {
+                    cout << "Encontrado -> Nombre: " << c.nombre << ", Número: " << c.numero << endl;
+                    encontrado = true;
+                }
+            }
+            if (!encontrado) {
+                cout << "No se encontró el contacto.\n";
+            }
+            break;
+        }
+        case 4: {
+            int subopcion;
+            cout << "\n--- Eliminar Contactos ---\n";
+            cout << "1) Eliminar toda la lista\n";
+            cout << "2) Eliminar el primer contacto\n";
+            cout << "3) Eliminar el ultimo contacto\n";
+            cout << "4) Eliminar un contacto especifico\n";
+            cout << "Que desea realizar?: ";
+            cin >> subopcion;
+
+            switch(subopcion) {
+                case 1:
+                    eliminar_toda_lista(agenda);
+                    break;
+                case 2:
+                    eliminar_tope(agenda);
+                    break;
+                case 3:
+                    eliminar_fondo(agenda);
+                    break;
+                case 4: {
+                    string identificador;
+                    cout << "Nombre o numero a eliminar: ";
+                    cin >> identificador;
+
+                    for (auto tf = agenda.begin(); tf != agenda.end(); ++tf) {
+                        if (tf->nombre == identificador || tf->numero == identificador) {
+                            cout << "Eliminando -> " << tf->nombre << endl;
+                            agenda.erase(tf);
+                            return;
+                        }
+                    }
+                    cout << "Contacto no encontrado.\n";
+                    break;
+                }
+                default:
+                    cout << "Opcion no valida.\n";
+            }
+            break;
+        }
+        case 5:
+            cout << "Saliendo...\n";
+            break;
+        default:
+            cout << "Ingrese una opcion valida.\n";
+    }
+}
+
+int main() {
+    list<Contacto> agenda;
+    int opcion;
+    do {
+        opcion = menu();
+        realizar_operacion(opcion, agenda);
+    } while (opcion != 5);
+
+    return 0;
+}
