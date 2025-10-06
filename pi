@@ -1,0 +1,30 @@
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+using namespace std ;
+
+long double arctan(long double x, int valores){
+	long double resultado = 0.0;
+	long double val ;
+	long double potencia = 1.0;
+	int signo = 1 ;
+	
+	for( int n = 0 ; n < valores; n++){
+		int denominador = 2 *n+1 ; 
+		val = signo * potencia / (denominador * pow( x, denominador)) ; 
+		resultado  += val ; 
+		signo *= -1 ; 
+	}
+	return resultado; 
+}
+
+int main(){
+	int valores ;
+	cout << "Insertar numero de ceros para la aproximacion: " ; 
+	cin >> valores ;
+	long double pi = 16.0 * arctan(5.0, valores) - 4.0* arctan(239.0, valores);
+	cout <<setprecision(30); 
+	cout << " -- - - |"<<  pi    <<"|- - - -" ; 
+	
+	
+}
