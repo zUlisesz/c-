@@ -1,0 +1,67 @@
+#include <iostream>
+#include <queue>
+using namespace std ; 
+
+struct Persona{
+		string nombre; 
+		int turno ;
+	};
+	
+void formar(queue <Persona>& fila ){
+	Persona tempo ; 
+	string nombre ;
+	int turno = fila.size() + 1;
+	
+	cout  <<"Nombre:\n" ;
+	cin>> nombre ; 
+	tempo.nombre = nombre ;
+	tempo.turno = turno ;
+	fila.push(tempo); 
+	cout << "Formado en la fila" << endl ; 
+	
+}
+
+void mostrar_fila(queue <Persona>& fila ){
+	if(fila.empty() ){
+		cout << "No hay nadie formado "<< endl ; 
+		return ; 
+	}
+	cout << "\n- - - - Miembros de la fila - - - -" << endl << endl ;
+	queue <Persona> copia = fila ; 
+	while(!copia.empty() ){
+		cout <<"Nombre: " << copia.front().nombre <<" - Numero de turno: " << copia.front().turno << endl ;
+		copia.pop()  ;  
+	}
+}
+
+void atender(queue <Persona>& fila){
+	if(fila.empty()){
+		cout <<"La fila esta vacia y no hay nadie a quien atender" << endl ; 
+		return ;
+	}
+	if(fila.size() == 1 ){
+		cout << "Atendiendo a: " << fila.front().nombre << endl ; 
+	}
+	if(fila.size()>1){
+		cout << "Atendiendo a: " << fila.front().nombre << endl ;
+		fila.pop() ; 
+	}
+}
+void vaciar_cola(queue <Persona>& fila){
+	while(!fila.empty()){
+		fila.pop(); 
+	}
+}
+
+int main(){
+	queue <Persona> fila ;
+	formar(fila) ; 
+	formar(fila) ;
+	formar(fila); 
+	
+	mostrar_fila(fila);
+	atender(fila) ; 
+	mostrar_fila(fila) ;
+	vaciar_cola(fila);
+	mostrar_fila(fila) ;    
+}
