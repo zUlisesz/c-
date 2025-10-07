@@ -1,0 +1,126 @@
+#include <iostream>
+using namespace std;
+
+struct Persona {
+    string nombre;
+    int turno;
+    Persona* siguiente;
+};
+
+struct Fila {
+    Persona* frente;
+    Persona* fin;
+    int contador;
+};
+void inicializar(Fila& fila) {
+    fila.frente = nullptr;
+    fila.fin = nullptr;
+    fila.contador = 0;
+}
+void formar(Fila& fila) {
+    Persona* nueva = new Persona;
+    cout << "Nombre: ";
+    cin >> nueva->nombre;
+    nueva->turno = fila.contador + 1;
+    nueva->siguiente = nullptr;
+
+    if (fila.frente == nullptr) 
+        fila.frente = nueva;
+        fila.fin = nueva;
+    } else {
+        fila.fin->siguiente = nueva;
+        fila.fin = nueva;
+    }
+
+    fila.contador++;
+    cout << "Formado en la fila con turno " << nueva->turno << endl;
+}
+
+
+void mostrar_fila(Fila& fila) {
+    if (fila.frente == nullptr) {
+        cout << "No hay nadie formado." << endl;
+        return;
+    }
+
+    cout << "\n- - - - Miembros de la fila - - - -" << endl << endl;
+    Persona* actual = fila.frente;
+    while (actual != nullptr) {
+        cout << "Nombre: " << actual->nombre
+             << " - Numero de turno: " << actual->turno << endl;
+        actual = actual->siguiente;
+    }
+}
+
+void atender(Fila& fila) {
+    if (fila.frente == nullptr) {
+        cout << "La fila está vacía, no hay nadie a quien atender." << endl;
+        return;
+    }
+
+    Persona* atender = fila.frente;
+    cout << "Atendiendo a: " << atender->nombre << endl;
+
+    fila.frente = fila.frente->siguiente;
+    delete atender;
+    fila.contador--;
+
+    if (fila.frente == nullptr) { 
+        fila.fin = nullptr;
+    }
+}
+
+// Vaciar toda la fila
+void vaciar_cola(Fila& fila) {
+    while (fila.frente != nullptr) {
+        Persona* temp = fila.frente;
+        fila.frente = fila.frente->siguiente;
+        delete temp;
+    }
+    fila.fin = nullptr;
+    fila.contador = 0;
+    cout << "La fila ha sido vaciada." << endl;
+}
+
+
+void realizar_operacion(Fila& fila) {
+    int opcion;
+    do {
+        cout << "\n--- MENU ---" << endl;
+        cout << "1) Formar persona" << endl;
+        cout << "2) Mostrar fila" << endl;
+        cout << "3) Atender persona" << endl;
+        cout << "4) Vaciar fila" << endl;
+        cout << "5) Salir" << endl;
+        cout << "Elige una opcion: ";
+        cin >> opcion;
+
+        switch (opcion) {
+            case 1:
+                formar(fila);
+                break;
+            case 2:
+                mostrar_fila(fila);
+                break;
+            case 3:
+                atender(fila);
+                break;
+            case 4:
+                vaciar_cola(fila);
+                break;
+            case 5:
+                cout << "Saliendo del programa..." << endl;
+                break;
+            default:
+                cout << "Opcion invalida, intenta nuevamente." << endl;
+        }
+    } while (opcion != 5);
+}
+
+int main() {
+    Fila fila;
+    inicializar(fila);
+    realizar_operacion(fila);
+    vaciar_cola(fila);
+    return 0;
+}
