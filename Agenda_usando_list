@@ -1,88 +1,134 @@
+// Bibloteca de entrada y salida de datos y el usos de cin y cout
 #include <iostream>
+// Bibloteca para el uso de string ( texto )
 #include <list>
+
+// Usamos el comando para evitar el uso de std:: cada vez que usemos string, cout y cin
 using namespace std;
 
+// Declaramos la estructura Contacto 
 struct Contacto {
+	// Variable tipo string ( nombre )
     string nombre;
+    // Variable tipo string ( telefno )
     string numero;
 };
 
 int menu() {
+	// Desplegamos el menu
     int opcion;
     cout << "\n---- AGENDA ----\n";
     cout << "1) Agregar contacto\n2) Ver contactos\n3) Buscar contacto\n4) Eliminar contacto\n5) Salir\n" << endl;
     cout << "Que operacion desea realizar? "<< endl ;
+    // Guardamos la opcion en la función
     cin >> opcion;
+    // Retornamos la opción del usuario
     return opcion;
 }
 
 void eliminar_toda_lista(list<Contacto>& agenda) {
+	// Vaciamos la lista agenda 
     agenda.clear();
+    // Desplegamos el mensaje de:
     cout << "Todos los contactos han sido eliminados.\n";
 }
 
 void eliminar_tope(list<Contacto>& agenda) {
+	// Si la genda no esta vacia 
     if (!agenda.empty()) {
-        cout << "Eliminando el primer contacto -> " 
-             << agenda.front().nombre << endl;
+    	// Desplegamos un mensaje y desplegamos que contacto estamos eliminando en este caso sera el contacto en tope de lista 
+        cout << "Eliminando el primer contacto -> " << agenda.front().nombre << endl;
+        // 	A nuestra lista agenda le eliminamos el tope
         agenda.pop_front();
     } else {
+    	// En dado caso que la agenda este vacia desplega el mensaje:
         cout << "La agenda está vacía.\n";
     }
 }
 
 void eliminar_fondo(list<Contacto>& agenda) {
+	// Si nuestra lista agenda no esta vacia
     if (!agenda.empty()) {
-        cout << "Eliminando el último contacto -> " 
-             << agenda.back().nombre << endl;
+    	// Desplegamos el mensaje y de igual manera colocamos el contacto al fondo de lista
+        cout << "Eliminando el último contacto -> " << agenda.back().nombre << endl;
+        // Eliminamos al contacto en el final de la lista
         agenda.pop_back();
     } else {
+    	// Desplegamos el mensaje:
         cout << "La agenda está vacía.\n";
     }
 }
 
 void realizar_operacion(int opcion, list<Contacto>& agenda) {
+	// Desplegamos los casos con el argumento de opcion antes seleccionado
     switch (opcion) {
+    	// Agregar contacto
         case 1:{
+        	// Creamos una estructura tipo contacto la cual llamamos nuevo
 		    Contacto nuevo;
+		    // Desplegamos el mensaje:
 		    cout << "Nombre del contacto: ";
+		    // Eliminamos cualquier espacio antes de la introduccion de caracteres
 		    cin.ignore();
+		    // Con getline leemos los datos ingresados sin embargo repetamos los espacios ingresados despues de caracteres ingresados
 		    getline(cin, nuevo.nombre);
+		    // Desplegamos el mensaje:
 		    cout << "Numero del contacto: ";
+		    // Leemos el numero de contacto
 		    cin >> nuevo.numero;
+		    // A nuestra lista agenda moveos el nuevo contacto al tope de nuestra lista
 		    agenda.push_front(nuevo);
+		    // Desplegamos el mensaje:
 		    cout << "Contacto agregado con Exitosamente.\n";
 		    break;
 		}
+		// Ver contactos
         case 2:{
+        	// Desplegamos el mensaje:
             cout << "\n--- Agenda ---\n";
+            // Si la agenda es esta vaicia
             if (agenda.empty()) {
+            	// Desplegamos el mensaje:
                 cout << "No hay contactos guardados.\n";
             } else {
+            	// En dado caso que no iniciamos un ciclo donde desplegamos los contactos
                 for (const auto& c : agenda) {
+                	// Desplegamos el nombre de la persona y sunumero
                     cout << "Nombre: " << c.nombre << ", Numero: " << c.numero << endl;
                 }
             }
             break;
     	}
+    	// Buscar contacto
         case 3: {
+        	// Variable string identificador
             string identificador;
+            // Desplegemos el mensaje:
             cout << "Nombre o número a buscar: ";
+            // Guardamos el nombre
             cin >> identificador;
 
+			// Declaramos un boleano en falso que nos ayudara a dectectar si el nombre/número a sido encontrado
             bool encontrado = false;
+            // Iniciamos un ciclo donde recorremos los datos de la lista
             for (const auto& c : agenda) {
+            	// Si el atributo nombre de la lista c es igual al identificador o el atributo numero de la lista c es igual al identificador
                 if (c.nombre == identificador || c.numero == identificador) {
+                	// Desplegamos el nombre y el numero del contacto buscado
                     cout << "Encontrado -> Nombre: " << c.nombre << ", Número: " << c.numero << endl;
+                    // Nuestro boleano cambiara de valor a true ya que fue encontrado
                     encontrado = true;
                 }
             }
+            // En dado caso que no solamente desplegara el mensaje de:
             if (!encontrado) {
                 cout << "No se encontró el contacto.\n";
             }
             break;
         }
+        // Menu
         case 4: {
+        	// Desplegamos los mensajes del menu
             int subopcion;
             cout << "\n--- Eliminar Contactos ---\n";
             cout << "1) Eliminar toda la lista\n";
@@ -91,8 +137,10 @@ void realizar_operacion(int opcion, list<Contacto>& agenda) {
             cout << "4) Eliminar un contacto especifico\n";
             cout << "Que desea realizar?: ";
             cin >> subopcion;
-
+			
+			// Iniciamos nuestro switch con el argumento de la subopcion
             switch(subopcion) {
+            	// Llamamons en cada caso su funcion correspondiente
                 case 1:
                     eliminar_toda_lista(agenda);
                     break;
@@ -103,40 +151,62 @@ void realizar_operacion(int opcion, list<Contacto>& agenda) {
                     eliminar_fondo(agenda);
                     break;
                 case 4: {
+                	// En este caso declaramos un string llamado identificador
                     string identificador;
+                    // Desplegamos el mensaje:
                     cout << "Nombre o numero a eliminar: ";
+                    // Lo guardamos
                     cin >> identificador;
 
+					// iniciamos un bucle auto el cual deduce el tipo de dato a ocupar el cual llamamos tf
+					// tf lo igualamos al valor de la agenda anterior
+					// Si tf no es igual al valor en la agenda final entonces tf avanza
                     for (auto tf = agenda.begin(); tf != agenda.end(); ++tf) {
+                    	// Si el atributo nombre de tf es igual al identificador
+                    	// O el atributo numero de tf es igual al identificador emtomces:
                         if (tf->nombre == identificador || tf->numero == identificador) {
+                        	// Desplegamos el mensaje:
                             cout << "Eliminando -> " << tf->nombre << endl;
+                            // La agenda borra el elemto de tf
                             agenda.erase(tf);
                             return;
                         }
                     }
+                    // Desplegamos el mensaje de:
                     cout << "Contacto no encontrado.\n";
                     break;
                 }
                 default:
+                	// Desplegamos el mensaje:
                     cout << "Opcion no valida.\n";
             }
             break;
         }
         case 5:
+        	// Desplegamos el mensaje
             cout << "Saliendo...\n";
             break;
         default:
+        	// Desplegamos el mensaje 
             cout << "Ingrese una opcion valida.\n";
     }
 }
 
 int main() {
+	// Declaramos una lista tipo contacto llamada agenda
     list<Contacto> agenda;
+    // Varible tipo entero llamada opcion
     int opcion;
+    // Hacer
     do {
+    	// Al menu se le asigna el valor de opcion
         opcion = menu();
+        // Realizamos la funcion que desplegara todos los casos que lleva los argumentos de opcion y lista agenda
         realizar_operacion(opcion, agenda);
+    // Mientras la opcion no sea igual a 5 se repetira
+    // En dado caso de ser igual a 5 saldra del switch
     } while (opcion != 5);
 
+	// Retornamos y salimos del programa 
     return 0;
 }
