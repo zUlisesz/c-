@@ -1,126 +1,135 @@
+//bibliotecas principales
 #include <iostream>
-using namespace std;
+#include <string>
+using namespace std; // evita el uso de std:: 
 
+// Estructura para  una persona en la fila 
 struct Persona {
-    string nombre;
-    int turno;
-    Persona* siguiente;
+    string nombre;       
+    int turno;           
+    Persona* siguiente;  // apunta al siguiente elemento en la fila
 };
 
+// Estructura de la cola completa
 struct Fila {
-    Persona* frente;
-    Persona* fin;
-    int contador;
+    Persona* frente;  // Apunta a la primera persona o tope 
+    Persona* fin;     // Apunta a la última persona fin
+    int contador;     
 };
-void inicializar(Fila& fila) {
-    fila.frente = nullptr;
-    fila.fin = nullptr;
-    fila.contador = 0;
-}
-void formar(Fila& fila) {
-    Persona* nueva = new Persona;
-    cout << "Nombre: ";
-    cin >> nueva->nombre;
-    nueva->turno = fila.contador + 1;
-    nueva->siguiente = nullptr;
 
-    if (fila.frente == nullptr) 
-        fila.frente = nueva;
-        fila.fin = nueva;
-    } else {
+void menu() {
+    cout << "\n--- MENU ---" << endl;
+    cout << "1) Formar persona" << endl;
+    cout << "2) Mostrar fila" << endl;
+    cout << "3) Atender persona" << endl;
+    cout << "4) Vaciar fila" << endl;
+    cout << "5) Salir" << endl;
+    cout << "Elige una opcion: ";
+}
+
+void inicializar(Fila& fila) {
+    fila.frente = nullptr;  
+    fila.fin = nullptr;     
+    fila.contador = 0;      
+}
+
+void formar(Fila& fila) {
+    Persona* nueva = new Persona; // Se reserva memoria dinámica para la nueva persona
+
+    cout << "Nombre: ";
+    cin >> nueva->nombre; // lectura del nombre de la persona
+
+    nueva->turno = ++fila.contador; // Se incrementa el contador y se asigna el turno
+    nueva->siguiente = nullptr;     // Como será el último, su puntero siguiente es nulo
+ 
+    if (!fila.frente){// Si no hay nadie en la fila, la nueva persona será el tope y el fin
+        fila.frente = fila.fin = nueva;
+	}
+    else {// Si ya hay personas, la persona debe ser formada al final de la cola
+        
         fila.fin->siguiente = nueva;
-        fila.fin = nueva;
+        fila.fin = nueva; // la nueva persona en llegar se forma el final
     }
 
-    fila.contador++;
-    cout << "Formado en la fila con turno " << nueva->turno << endl;
+    cout << "Formado con turno: " << nueva->turno << endl;
 }
 
-
-void mostrar_fila(Fila& fila) {
-    if (fila.frente == nullptr) {
-        cout << "No hay nadie formado." << endl;
+void mostrar_fila(const Fila& fila) {
+    if (!fila.frente) { // Si el puntero del tope es nulo, no hay nadie fromado
+        cout << "La fila esta vacia.\n";
         return;
     }
 
-    cout << "\n- - - - Miembros de la fila - - - -" << endl << endl;
-    Persona* actual = fila.frente;
-    while (actual != nullptr) {
-        cout << "Nombre: " << actual->nombre
-             << " - Numero de turno: " << actual->turno << endl;
-        actual = actual->siguiente;
-    }
+    cout << "\n--- Personas en la fila ---\n";
+
+    // Recorre la lista desde el frente hasta que ya no haya más personas con un puntero auxiliar
+    for (Persona* aux = fila.frente; aux; aux = aux->siguiente){
+    	cout << "Turno " << aux->turno << " - " << aux->nombre << endl; // mostrar información de la persona
+	}
+        
 }
+
 
 void atender(Fila& fila) {
-    if (fila.frente == nullptr) {
-        cout << "La fila está vacía, no hay nadie a quien atender." << endl;
+    if (!fila.frente) { // si la fila está vacía no hay a quien atender
+        cout << "No hay nadie en la fila.\n";
         return;
     }
 
-    Persona* atender = fila.frente;
-    cout << "Atendiendo a: " << atender->nombre << endl;
+    Persona* atendida = fila.frente; // Guardamos a la persona del frente
+    cout << "Atendiendo a " << atendida->nombre 
+         << " (Turno " << atendida->turno << ")\n";
 
-    fila.frente = fila.frente->siguiente;
-    delete atender;
-    fila.contador--;
+    // Recorremos el frente hacia la siguiente persona
+    fila.frente = atendida->siguiente;
+ 
+    delete atendida;// Liberamos la memoria de la persona atendida
 
-    if (fila.frente == nullptr) { 
-        fila.fin = nullptr;
-    }
+    // Si la fila quedó vacía después de atender, reiniciar el puntero fin
+    if (!fila.frente){
+    	fila.fin = nullptr;	
+    	fila.contador = 0 ;
+	}   
 }
 
-// Vaciar toda la fila
+
 void vaciar_cola(Fila& fila) {
-    while (fila.frente != nullptr) {
-        Persona* temp = fila.frente;
-        fila.frente = fila.frente->siguiente;
-        delete temp;
+    while (fila.frente) { // mientras aún haya alguien en la fila
+        Persona* temp = fila.frente;           // guardamos la persona actual
+        fila.frente = fila.frente->siguiente;  // recorremos a la siguiente persona
+        delete temp;                           // liberamos la memoria borrando a la persona guardada
     }
+    // nna vez vacía la fila, restablecemos los valores
     fila.fin = nullptr;
     fila.contador = 0;
-    cout << "La fila ha sido vaciada." << endl;
-}
 
+    cout << "La fila ha sido vaciada.\n";
+}
 
 void realizar_operacion(Fila& fila) {
     int opcion;
+
     do {
-        cout << "\n--- MENU ---" << endl;
-        cout << "1) Formar persona" << endl;
-        cout << "2) Mostrar fila" << endl;
-        cout << "3) Atender persona" << endl;
-        cout << "4) Vaciar fila" << endl;
-        cout << "5) Salir" << endl;
-        cout << "Elige una opcion: ";
+        menu();
         cin >> opcion;
 
         switch (opcion) {
-            case 1:
-                formar(fila);
-                break;
-            case 2:
-                mostrar_fila(fila);
-                break;
-            case 3:
-                atender(fila);
-                break;
-            case 4:
-                vaciar_cola(fila);
-                break;
-            case 5:
-                cout << "Saliendo del programa..." << endl;
-                break;
-            default:
-                cout << "Opcion invalida, intenta nuevamente." << endl;
+            case 1: formar(fila); break;         // agregar una persona
+            case 2: mostrar_fila(fila); break;   // ver personas de la fila
+            case 3: atender(fila); break;        // atender al primero
+            case 4: vaciar_cola(fila); break;    // vaciar toda la cola
+            case 5: cout << "Saliendo del programa...\n"; break;
+            default: cout << "Opcion invalida.\n"; break;
         }
-    } while (opcion != 5);
+
+    } while (opcion != 5); // se mantendrá dentro del bule mientras no se presione la opcion 5
 }
 
 int main() {
-    Fila fila;
-    inicializar(fila);
-    realizar_operacion(fila);
-    vaciar_cola(fila);
-    return 0;
+    Fila fila;// se crea la estructura de la cola con la que trabajaremos
+    inicializar(fila); // Se inicializan su atributos como vacios
+    realizar_operacion(fila);  
+    vaciar_cola(fila); 
+    return 0;               
 }
+
