@@ -1,13 +1,22 @@
 //librerias principales
 #include <iostream>
 #include <queue>
-using namespace std; // evitar eñl uso de std::
+using namespace std; // evitar el uso de std::
 
 struct Persona { //estructura que almacena datos de cada persona que se forma en la fila
     string nombre;
     int turno;
 };
-
+//función que muestra un menú de opciones para el usuario
+void menu(){
+	cout << "\n--- MENU ---" << endl;
+    cout << "1) Formar persona" << endl;
+    cout << "2) Mostrar fila" << endl;
+    cout << "3) Atender persona" << endl;
+    cout << "4) Vaciar fila" << endl;
+    cout << "5) Salir" << endl;
+    cout << "Elige una opcion: ";
+}
 //esta función simula el formado de una persona en la fila
 void formar(queue<Persona>& fila) { // el único argumento de esta función es una cola
     Persona tempo;// Estructura temporal para almnacenar datos de la nueva persona
@@ -23,18 +32,6 @@ void formar(queue<Persona>& fila) { // el único argumento de esta función es u
     tempo.turno = turno;
     fila.push(tempo);// se agrega la estructura temporal a la cola
     cout << "Formado en la fila" << endl;
-}
-
-//función que muestra un menú de opciones para el usuario
-void menu(){
-	cout << "\n--- MENU ---" << endl;
-    cout << "1) Formar persona" << endl;
-    cout << "2) Mostrar fila" << endl;
-    cout << "3) Atender persona" << endl;
-    cout << "4) Vaciar fila" << endl;
-    cout << "5) Salir" << endl;
-    cout << "Elige una opcion: ";
-    
 }
 
 //función que muestra a todas las personas formadas
