@@ -1,0 +1,148 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{algorithm2e}
+
+\begin{document}
+
+\RestyleAlgo{ruled}
+\SetAlgoNlRelativeSize{-2}
+
+Estructura \texttt{Persona}
+\begin{enumerate}
+    \item{nombre: cadena}
+    \item{turno: entero}
+    \item {siguiente: puntero a Persona}
+\end{enumerate}
+
+Estructura \texttt{Fila}
+\begin{enumerate}
+    \item{frente: puntero a Persona}
+    \item{fin: puntero a persona}
+    \item {contador: entero}
+\end{enumerate}
+
+\begin{algorithm}[H]
+\caption{inicializar(fila)}
+\texttt{fila.frente} $\leftarrow$ nulo\;
+\texttt{fila.fin} $\leftarrow$ nulo\;
+\texttt{fila.contador} $\leftarrow$ 0\;
+\end{algorithm}
+
+
+\begin{algorithm}[H]
+\caption{menu()}
+Escribir ``--- MENÚ ---''\;
+Escribir ``1) Formar persona''\;
+Escribir ``2) Mostrar fila''\;
+Escribir ``3) Atender persona''\;
+Escribir ``4) Vaciar fila''\;
+Escribir ``5) Salir''\;
+Escribir ``Elige una opción:''\;
+\end{algorithm}
+
+
+\begin{algorithm}[H]
+\caption{formar(fila)}
+Declarar \texttt{nueva} de tipo \texttt{Persona}\;
+Escribir ``Nombre:''\;
+Leer \texttt{nueva.nombre}\;
+\texttt{nueva.turno} $\leftarrow$ \texttt{fila.contador} + 1\;
+\texttt{nueva.siguiente} $\leftarrow$ nulo\;
+\eIf{fila.frente es nulo}{
+    \texttt{fila.frente} $\leftarrow$ \texttt{nueva}\;
+    \texttt{fila.fin} $\leftarrow$ \texttt{nueva}\;
+}{
+    \texttt{fila.fin.siguiente} $\leftarrow$ \texttt{nueva}\;
+    \texttt{fila.fin} $\leftarrow$ \texttt{nueva}\;
+}
+Incrementar \texttt{fila.contador}\;
+Escribir ``Formado en la fila con turno'' \texttt{nueva.turno}\;
+\end{algorithm}
+
+
+\begin{algorithm}[H]
+\caption{mostrar\_fila(fila)}
+\If{fila.frente es nulo}{
+    Escribir ``No hay nadie formado.''\;
+    \Return
+}
+Escribir ``Miembros de la fila:''\;
+\texttt{aux} $\leftarrow$ \texttt{fila.frente}\;
+\While{\texttt{aux} $\neq$ nulo}{
+    Escribir ``Nombre:'' \texttt{aux.nombre} ``- Turno:'' \texttt{aux.turno}\;
+    \texttt{aux} $\leftarrow$ \texttt{aux.siguiente}\;
+}
+\end{algorithm}
+
+\begin{algorithm}[H]
+\caption{atender(fila)}
+\If{fila.frente es nulo}{
+    Escribir ``La fila está vacía, no hay nadie a quien atender.''\;
+    \Return
+}
+\texttt{atender} $\leftarrow$ \texttt{fila.frente}\;
+Escribir ``Atendiendo a:'' \texttt{atender.nombre}\;
+\texttt{fila.frente} $\leftarrow$ \texttt{fila.frente.siguiente}\;
+Liberar memoria de \texttt{atender}\;
+\If{fila.frente es nulo}{
+    \texttt{fila.fin} $\leftarrow$ nulo\;
+    \texttt{fila.contador} $\leftarrow$ 0\;
+}
+\end{algorithm}
+
+
+\begin{algorithm}[H]
+\caption{vaciar\_cola(fila)}
+\While{\texttt{fila.frente} $\neq$ nulo}{
+    \texttt{temp} $\leftarrow$ \texttt{fila.frente}\;
+    \texttt{fila.frente} $\leftarrow$ \texttt{fila.frente.siguiente}\;
+    Liberar memoria de \texttt{temp}\;
+}
+\texttt{fila.fin} $\leftarrow$ nulo\;
+\texttt{fila.contador} $\leftarrow$ 0\;
+Escribir ``La fila ha sido vaciada.''\;
+\end{algorithm}
+
+
+\begin{algorithm}[H]
+\caption{realizar\_operacion(fila)}
+\Repeat{
+    opcion = 5
+}{
+    \texttt{menu()}\;
+    Leer \texttt{opcion}\;
+    \Switch{opcion}{
+        \Case{1}{
+            \texttt{formar(fila)}\;
+        }
+        \Case{2}{
+            \texttt{mostrar\_fila(fila)}\;
+        }
+        \Case{3}{
+            \texttt{atender(fila)}\;
+        }
+        \Case{4}{
+            \texttt{vaciar\_cola(fila)}\;
+        }
+        \Case{5}{
+            Escribir ``Saliendo del programa...''\;
+        }
+        \Other{
+            Escribir ``Opción inválida, intenta nuevamente.''\;
+        }
+    }
+}
+\end{algorithm}
+
+
+\begin{algorithm}[H]
+\caption{main()}
+Declarar a \texttt{fila} de tipo \texttt{Fila}\;
+\texttt{inicializar(fila)}\;
+\texttt{realizar\_operacion(fila)}\;
+\texttt{vaciar\_cola(fila)}\;
+\Return 0\;
+\end{algorithm}
+
+\end{document}
